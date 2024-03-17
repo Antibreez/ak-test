@@ -8,7 +8,7 @@ export default {}
 
 <style scoped lang="scss">
 .stub {
-  min-height: calc(var(--vh, 1vh) * 100);
+  min-height: 100vh;
   background: #333333;
 }
 </style>

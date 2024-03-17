@@ -1,0 +1,11 @@
+@function sbig($value, $base: 24) {
+  @return calc($value / $base * 1rem);
+}
+
+@function ssmall($value, $base: 16) {
+  @return calc($value / $base * 1rem);
+}
+
+@function vheight($value, $base: 1189) {
+  @return calc($value / $base * 100vh);
+}

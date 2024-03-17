@@ -1,0 +1,55 @@
+// ШРИФТЫ
+@mixin font-face($name, $filename, $weight) {
+  @font-face {
+    font-family: $name;
+    font-weight: $weight;
+    font-style: normal;
+    src: local(''),
+      url('../assets/fonts/' + $filename + '.woff2') format('woff2'),
+      url('../assets/fonts/' + $filename + '.woff') format('woff'),
+  }
+}
+
+// РЕТИНА
+@mixin retina {
+  @media (min-resolution: $retina-dpi), (min-resolution: $retina-dppx) {
+    @content;
+  }
+}
+
+// РАЗМЕРЫ ЭКРАНА
+@mixin big-screen {
+  @media (orientation: landscape) {
+    @content;
+  }
+}
+
+@mixin narrow-landscape {
+  @media (max-aspect-ratio: 1920 / 1189) {
+    @content;
+  }
+}
+
+@mixin extra-landscape {
+  @media (min-aspect-ratio: 1920 / 950) {
+    @content;
+  }
+}
+
+@mixin medium-screen {
+  @media (orientation: portrait) and (min-width: $tablet) {
+    @content;
+  }
+}
+
+@mixin small-screen {
+  @media (orientation: portrait) and (max-width: ($tablet - 0.5px)) {
+    @content;
+  }
+}
+
+@mixin narrow-mobile {
+  @media (min-aspect-ratio: 524 / 824) {
+    @content;
+  }
+}

@@ -208,6 +208,10 @@ export default {
       left: 4.22%;
     }
 
+    @media (min-aspect-ratio: 1920 / 1065) {
+      bottom: 20%;
+    }
+
     @include extra-landscape {
       bottom: 25%;
     }

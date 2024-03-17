@@ -57,6 +57,7 @@ export default class CatAnimation {
 
   restart() {
     this.tln.seek(0).kill();
+    this.tln = null;
     this.init();
   }
 }

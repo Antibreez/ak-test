@@ -32,14 +32,7 @@
 
 <script>
 import Figure from './Figure.vue';
-// import gsap from 'gsap';
-// import ScrollTrigger from 'gsap/ScrollTrigger';
-// import MotionPathPlugin from 'gsap/MotionPathPlugin';
-import { debounce } from '../helpers/utils';
 import CatAnimation from '../helpers/catAnimations';
-
-// gsap.registerPlugin(ScrollTrigger);
-// gsap.registerPlugin(MotionPathPlugin);
 
 export default {
   components: {
@@ -51,8 +44,9 @@ export default {
     }
   },
   mounted() {
-    const figures = this.$refs.catScreen.querySelectorAll('.figure');
-    const shadows = this.$refs.catScreen.querySelectorAll('.cat-screen__shadow');
+    const screen = this.$refs.catScreen;
+    const figures = screen.querySelectorAll('.figure');
+    const shadows = screen.querySelectorAll('.cat-screen__shadow');
 
     const figuresAnimation = new CatAnimation(figures, '#motionPath');
     const shadowsAnimation = new CatAnimation(shadows, '#shadowPath');
@@ -60,64 +54,31 @@ export default {
     figuresAnimation.init();
     shadowsAnimation.init();
 
-    // let figuresTl;
-    // let figuresScrollTl;
+    const debounce = (func, timeout = 400) => {
+      let timer;
+      let width;
+      let height;
 
-    // let shadowsTl;
-    // let shadowsScrollTl;
+      return (...args) => {
+        if (!width) width = screen.getBoundingClientRect().width;
+        if (!height) height = screen.getBoundingClientRect().height;
 
-    // const dur = 1;
-
-    // const makeAnimation = (tln, items, path, sclTr) => {
-    //   tln = gsap.timeline();
-    //   items.forEach((obj, i) => {
-    //     let tl = gsap.timeline({ repeat: -1, delay: i * (dur / items.length) });
-    //     tl.to(obj, {
-    //       duration: dur,
-    //       motionPath: {
-    //         path: path,
-    //         align: path,
-    //         alignOrigin: [0.5, 0.5]
-    //       },
-    //       ease: "none"
-    //     });
-    //     tl.to(
-    //       obj,
-    //       { scale: 0.1, opacity: 0.1, zIndex: 1, duration: dur / 2, repeat: 1, yoyo: true, ease: "sine.inOut" },
-    //       0
-    //     );
-    //     tln.add(tl, 0);
-    //   });
-
-    //   tln.time(dur);
-
-    //   ScrollTrigger.create({
-    //     trigger: ".cat-screen",
-    //     start: "top 95%",
-    //     end: "bottom 5%",
-    //     onUpdate: (self) => {
-    //       sclTr && sclTr.kill();
-    //       sclTr = gsap
-    //         .timeline()
-    //         .to(tln, { timeScale: 0.1 * self.direction, duration: 0.1 })
-    //         .to(tln, { timeScale: 0.02, duration: 1 }, "+=0");
-    //     }
-    //   });
-    // }
-
-    // makeAnimation(figuresTl, figures, '#motionPath', figuresScrollTl);
-    // makeAnimation(shadowsTl, shadows, '#shadowPath', shadowsScrollTl);
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          if (screen.getBoundingClientRect().width !== width || screen.getBoundingClientRect().height !== height) {
+            console.log('resize');
+            func.apply(this, args);
+          }
+          width = null;
+          height = null;
+        }, timeout);
+      };
+    }
 
     const onResize = debounce(() => {
-      // figuresTl.seek(0).kill();
-      // shadowsTl.seek(0).kill();
-      // ScrollTrigger.killAll();
       figuresAnimation.killAllScrollTriggers();
       figuresAnimation.restart();
       shadowsAnimation.restart();
-
-      // makeAnimation(figuresTl, figures, '#motionPath', figuresScrollTl);
-      // makeAnimation(shadowsTl, shadows, '#shadowPath', shadowsScrollTl);
     });
 
     window.addEventListener("resize", onResize);

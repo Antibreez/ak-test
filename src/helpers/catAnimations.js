@@ -10,6 +10,7 @@ export default class CatAnimation {
     this.items = items;
     this.path = path;
     this.tln = null;
+    this.innerTln = [];
     this.scrollTln = null;
     this.dur = 1;
   }
@@ -17,7 +18,7 @@ export default class CatAnimation {
   init() {
     this.tln = gsap.timeline();
     this.items.forEach((obj, i) => {
-      let tl = gsap.timeline({ repeat: -1, delay: i * (this.dur / this.items.length) });
+      const tl = gsap.timeline({ repeat: -1, delay: i * (this.dur / this.items.length) });
       tl.to(obj, {
         duration: this.dur,
         motionPath: {
@@ -33,6 +34,8 @@ export default class CatAnimation {
         0
       );
       this.tln.add(tl, 0);
+
+      this.innerTln.push(tl);
     });
 
     this.tln.time(this.dur);
@@ -56,7 +59,9 @@ export default class CatAnimation {
   }
 
   restart() {
-    this.tln.seek(0).kill();
+    this.innerTln.forEach(tl => tl.seek(0).kill())
+    this.innerTln = [];
+    this.tln && this.tln.seek(0).kill();
     this.tln = null;
     this.init();
   }

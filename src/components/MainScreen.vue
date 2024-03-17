@@ -107,7 +107,7 @@ export default {
   &__inner {
     @include small-screen {
       position: relative;
-      height: calc(var(--vh, 1vh) * 100);
+      height: 100vh;
     }
   }
 

@@ -65,8 +65,9 @@ export default {
 
         clearTimeout(timer);
         timer = setTimeout(() => {
+
+          // Перезапускаем анимацию только при изменении размеров контейнера
           if (screen.getBoundingClientRect().width !== width || screen.getBoundingClientRect().height !== height) {
-            console.log('resize');
             func.apply(this, args);
           }
           width = null;

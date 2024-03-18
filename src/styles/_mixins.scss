@@ -48,7 +48,7 @@
   }
 }
 
-@mixin narrow-mobile {
+@mixin wide-mobile {
   @media (min-aspect-ratio: 524 / 824) {
     @content;
   }

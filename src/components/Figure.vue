@@ -218,7 +218,7 @@ export default {
       width: ssmall(65);
       height: ssmall(65);
 
-      @include narrow-mobile {
+      @include wide-mobile {
         left: 5%;
       }
     }
@@ -292,7 +292,7 @@ export default {
       width: ssmall(36);
       height: ssmall(36);
 
-      @include narrow-mobile {
+      @include wide-mobile {
         left: 5%;
       }
     }
@@ -370,7 +370,7 @@ export default {
       width: ssmall(108);
       height: ssmall(108);
 
-      @include narrow-mobile {
+      @include wide-mobile {
         top: 10%;
       }
     }
@@ -443,7 +443,7 @@ export default {
       width: ssmall(79);
       height: ssmall(79);
 
-      @include narrow-mobile {
+      @include wide-mobile {
         right: 2%;
       }
     }

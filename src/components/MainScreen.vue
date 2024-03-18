@@ -193,7 +193,7 @@ export default {
       height: ssmall(47);
       transform: rotate(-45deg);
 
-      @include narrow-mobile {
+      @include wide-mobile {
         height: ssmall(40);
       }
     }
@@ -225,7 +225,7 @@ export default {
       left: auto;
       right: 7.81%;
 
-      @include narrow-mobile {
+      @include wide-mobile {
         right: 20%;
       }
     }
@@ -264,7 +264,7 @@ export default {
       top: 43.33%;
       right: 16.56%;
 
-      @include narrow-mobile {
+      @include wide-mobile {
         right: 25%;
       }
     }

@@ -1,5 +1,6 @@
 <template>
   <section ref="mainScreen" class="main-screen">
+    <h1 class="visually-hidden">Bit Block</h1>
     <div class="main-screen__inner">
       <Figure
         v-for="(number, index) in figuresArray"

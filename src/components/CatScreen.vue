@@ -77,7 +77,8 @@ export default {
     }
 
     const onResize = debounce(() => {
-      figuresAnimation.killAllScrollTriggers();
+      figuresAnimation.killScrollTrigger();
+      shadowsAnimation.killScrollTrigger();
       figuresAnimation.restart();
       shadowsAnimation.restart();
     });

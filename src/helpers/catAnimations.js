@@ -5,6 +5,20 @@ import MotionPathPlugin from 'gsap/MotionPathPlugin';
 gsap.registerPlugin(ScrollTrigger);
 gsap.registerPlugin(MotionPathPlugin);
 
+function getIntervals(num, delta) {
+  const diff = 0.25 / num;
+
+  const a1 = Array.from({length: num}, (v, k) => +(diff + delta * (num - k - 1)).toFixed(5));
+  const a2 = Array.from({length: num}, (v, k) => +(diff - delta * (k === num - 1 ? k - 1 : k)).toFixed(5));
+
+  return [
+    ...a2.reverse(),
+    ...a1.reverse(),
+    ...a1.reverse(),
+    ...a2.reverse()
+  ];
+}
+
 export default class CatAnimation {
   constructor(items, path) {
     this.items = items;
@@ -13,24 +27,34 @@ export default class CatAnimation {
     this.innerTln = [];
     this.scrollTln = null;
     this.dur = 1;
+    this.scT = null;
   }
 
   init() {
     this.tln = gsap.timeline();
     this.items.forEach((obj, i) => {
+
       const tl = gsap.timeline({ repeat: -1, delay: i * (this.dur / this.items.length) });
-      tl.to(obj, {
-        duration: this.dur,
-        motionPath: {
-          path: this.path,
-          align: this.path,
-          alignOrigin: [0.5, 0.5]
-        },
-        ease: "none"
-      });
+
+      const intervals = getIntervals(10, 0.002);
+
+      intervals.forEach((int, j) => {
+        tl.to(obj, {
+          duration: int,
+          motionPath: {
+            path: this.path,
+            align: this.path,
+            alignOrigin: [0.5, 0.5],
+            start: j / intervals.length,
+            end: j / intervals.length + 1 / intervals.length
+          },
+          ease: "none",
+        });
+      })
+
       tl.to(
         obj,
-        { scale: 0.1, opacity: 0.1, zIndex: 1, duration: this.dur / 2, repeat: 1, yoyo: true, ease: "sine.inOut" },
+        { scale: 0.05, opacity: 0.1, zIndex: 1, duration: this.dur / 2, repeat: 1, yoyo: true, ease: "none" },
         0
       );
       this.tln.add(tl, 0);
@@ -40,7 +64,7 @@ export default class CatAnimation {
 
     this.tln.time(this.dur);
 
-    ScrollTrigger.create({
+    this.scT = ScrollTrigger.create({
       trigger: ".cat-screen",
       start: "top 95%",
       end: "bottom 5%",
@@ -54,8 +78,8 @@ export default class CatAnimation {
     });
   }
 
-  killAllScrollTriggers() {
-    ScrollTrigger.killAll();
+  killScrollTrigger() {
+    this.scT.kill();
   }
 
   restart() {

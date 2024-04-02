@@ -40,7 +40,7 @@ export default {
   },
   data() {
     return {
-      figuresArray: [2, 3, 7, 5, 2, 7, 4, 9, 3, 5],
+      figuresArray: [2, 3, 7, 9, 5, 2, 7, 4, 9, 2, 3, 5],
     }
   },
   mounted() {
@@ -118,6 +118,10 @@ export default {
     bottom: unset;
     width: vheight(324);
     height: vheight(324);
+
+    &:nth-child(n) {
+      z-index: 3;
+    }
 
     @include medium-screen {
       width: sbig(324);

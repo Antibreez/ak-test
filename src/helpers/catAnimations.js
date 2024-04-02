@@ -9,13 +9,15 @@ function getIntervals(num, delta) {
   const diff = 0.25 / num;
 
   const a1 = Array.from({length: num}, (v, k) => +(diff + delta * (num - k - 1)).toFixed(5));
-  const a2 = Array.from({length: num}, (v, k) => +(diff - delta * (k === num - 1 ? k - 1 : k)).toFixed(5));
+  const a2 = Array.from({length: num}, (v, k) => +(diff - delta * (k)).toFixed(5));
+  const a3 = [...a2].reverse();
+  const a4 = [...a1].reverse();
 
   return [
-    ...a2.reverse(),
-    ...a1.reverse(),
-    ...a1.reverse(),
-    ...a2.reverse()
+    ...a3,
+    ...a4,
+    ...a1,
+    ...a2
   ];
 }
 
@@ -33,10 +35,19 @@ export default class CatAnimation {
   init() {
     this.tln = gsap.timeline();
     this.items.forEach((obj, i) => {
+      //if (i > 0) return;
 
       const tl = gsap.timeline({ repeat: -1, delay: i * (this.dur / this.items.length) });
 
       const intervals = getIntervals(10, 0.002);
+
+      for (let i = 1; i <= 2; i++) {
+        intervals.splice(intervals.length - 1, 0, intervals.shift());
+      }
+
+      console.log(intervals.reduce((prev, next) => prev + next, 0));
+
+      console.log(intervals);
 
       intervals.forEach((int, j) => {
         tl.to(obj, {
@@ -49,12 +60,13 @@ export default class CatAnimation {
             end: j / intervals.length + 1 / intervals.length
           },
           ease: "none",
+          // filter: j > 35 ? 'grayscale(1)' : 'grayscale(0)'
         });
       })
 
       tl.to(
         obj,
-        { scale: 0.05, opacity: 0.1, zIndex: 1, duration: this.dur / 2, repeat: 1, yoyo: true, ease: "none" },
+        { scale: 0.1, opacity: 0.1, zIndex: 1, duration: this.dur / 2, repeat: 1, yoyo: true, ease: "none" },
         0
       );
       this.tln.add(tl, 0);

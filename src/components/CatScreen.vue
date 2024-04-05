@@ -2,22 +2,41 @@
   <section ref="catScreen" class="cat-screen">
     <div class="cat-screen__cat-image"></div>
     <div class="cat-screen__figures-path">
-      <svg width="1495" height="520" viewBox="0 0 1495 520" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path id="motionPath" d="M790.5 265C849 223.5 1066.95 0.500072 1235 0.5C1453.5 0.499906 1493.5 97 1494.5 222.5C1495.66 368.5 1283.5 465.5 1111.5 437.5C939.5 409.5 557.5 312 504 292C450.5 272 249 195 136 225.5C23 256 -3.34159e-05 309.5 1.49997 356C2.99997 402.5 141 546.5 349 514.5C557 482.5 660 364.785 790.5 265Z" stroke="black"/>
+      <svg
+        width="1495"
+        height="520"
+        viewBox="0 0 1495 520"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          id="motionPath"
+          d="M790.5 265C849 223.5 1066.95 0.500072 1235 0.5C1453.5 0.499906 1493.5 97 1494.5 222.5C1495.66 368.5 1283.5 465.5 1111.5 437.5C939.5 409.5 557.5 312 504 292C450.5 272 249 195 136 225.5C23 256 -3.34159e-05 309.5 1.49997 356C2.99997 402.5 141 546.5 349 514.5C557 482.5 660 364.785 790.5 265Z"
+          stroke="black"
+        />
       </svg>
     </div>
     <div class="cat-screen__shadows-path">
-      <svg width="1558" height="327" viewBox="0 0 1558 327" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path id="shadowPath" d="M621 301.5C790 324.5 1218.5 327.5 1274 325.5C1472 314 1557.5 243.5 1557.5 214C1557.5 184.5 1537.5 169.5 1451 134C1364.5 98.4998 1246.5 80.4999 1127 50.9999C1007.5 21.4999 435.801 -4.51607 312 1.99991C188.5 8.50003 -6.09426 16.3704 1.49995 93.9999C5.99998 140 40.5 151 94 180.5C147.5 210 452 278.5 621 301.5Z" stroke="black"/>
-</svg>
-
-
+      <svg
+        width="1558"
+        height="327"
+        viewBox="0 0 1558 327"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          id="shadowPath"
+          d="M621 301.5C790 324.5 1218.5 327.5 1274 325.5C1472 314 1557.5 243.5 1557.5 214C1557.5 184.5 1537.5 169.5 1451 134C1364.5 98.4998 1246.5 80.4999 1127 50.9999C1007.5 21.4999 435.801 -4.51607 312 1.99991C188.5 8.50003 -6.09426 16.3704 1.49995 93.9999C5.99998 140 40.5 151 94 180.5C147.5 210 452 278.5 621 301.5Z"
+          stroke="black"
+        />
+      </svg>
     </div>
     <div>
       <Figure
         v-for="(figure, index) in figuresArray"
         :key="index"
         :number="figure"
+        :class="{ 'is--hidden': !isFiguresVisible }"
       />
     </div>
     <div>
@@ -25,34 +44,37 @@
         v-for="(item, index) in figuresArray"
         :key="index"
         class="cat-screen__shadow"
-      />
+        :class="{ 'is--hidden': !isFiguresVisible }"
+      >
+        <div />
+      </div>
     </div>
   </section>
 </template>
 
 <script>
-import Figure from './Figure.vue';
-import CatAnimation from '../helpers/catAnimations';
+import Figure from "./Figure.vue";
+import CatAnimation from "../helpers/catAnimations";
+import { isBlockInViewport } from "../helpers/utils.js";
 
 export default {
   components: {
-    Figure
+    Figure,
   },
   data() {
     return {
       figuresArray: [2, 3, 7, 9, 5, 2, 7, 4, 9, 2, 3, 5],
-    }
+      isInView: false,
+      isFiguresVisible: false,
+    };
   },
   mounted() {
-    const screen = this.$refs.catScreen;
-    const figures = screen.querySelectorAll('.figure');
-    const shadows = screen.querySelectorAll('.cat-screen__shadow');
+    const { catScreen } = this.$refs;
+    const figures = catScreen.querySelectorAll(".figure");
+    const shadows = catScreen.querySelectorAll(".cat-screen__shadow");
 
-    const figuresAnimation = new CatAnimation(figures, '#motionPath');
-    const shadowsAnimation = new CatAnimation(shadows, '#shadowPath');
-
-    figuresAnimation.init();
-    shadowsAnimation.init();
+    const figuresAnimation = new CatAnimation(figures, "#motionPath");
+    const shadowsAnimation = new CatAnimation(shadows, "#shadowPath");
 
     const debounce = (func, timeout = 400) => {
       let timer;
@@ -60,44 +82,72 @@ export default {
       let height;
 
       return (...args) => {
-        if (!width) width = screen.getBoundingClientRect().width;
-        if (!height) height = screen.getBoundingClientRect().height;
+        if (!width) width = catScreen.getBoundingClientRect().width;
+        if (!height) height = catScreen.getBoundingClientRect().height;
 
         clearTimeout(timer);
         timer = setTimeout(() => {
-
           // Перезапускаем анимацию только при изменении размеров контейнера
-          if (screen.getBoundingClientRect().width !== width || screen.getBoundingClientRect().height !== height) {
+          if (
+            catScreen.getBoundingClientRect().width !== width ||
+            catScreen.getBoundingClientRect().height !== height
+          ) {
             func.apply(this, args);
           }
           width = null;
           height = null;
         }, timeout);
       };
-    }
+    };
 
     const onResize = debounce(() => {
-      figuresAnimation.killScrollTrigger();
-      shadowsAnimation.killScrollTrigger();
+      // figuresAnimation.killScrollTrigger();
+      // shadowsAnimation.killScrollTrigger();
       figuresAnimation.restart();
       shadowsAnimation.restart();
     });
 
+    const onScroll = () => {
+      this.isInView = isBlockInViewport(catScreen, 1.75);
+
+      if (this.isInView) {
+        figuresAnimation.init().then(() => (this.isFiguresVisible = true));
+        shadowsAnimation.init();
+      } else {
+        figuresAnimation.stop();
+        shadowsAnimation.stop();
+        this.isFiguresVisible = false;
+      }
+    };
+
+    // this.isInView = isBlockInViewport(catScreen);
+
+    // if (this.isInView) {
+    //   console.log("##### is in view");
+    //   figuresAnimation.init();
+    //   shadowsAnimation.init();
+    // } else {
+    //   console.log("#####not in view");
+    //   figuresAnimation.stop();
+    //   shadowsAnimation.stop();
+    // }
+
     window.addEventListener("resize", onResize);
-  }
-}
+    window.addEventListener("scroll", onScroll);
+  },
+};
 </script>
 
 <style lang="scss">
-@import '../styles/variables';
-@import '../styles/functions';
-@import '../styles/mixins';
+@import "../styles/variables";
+@import "../styles/functions";
+@import "../styles/mixins";
 
 .cat-screen {
   position: relative;
   height: calc(var(--vh, 1vh) * 100);
   max-width: calc(var(--vw, 1vw) * 100);
-  background: #EAF0EE;
+  background: #eaf0ee;
   overflow: hidden;
 
   @include medium-screen {
@@ -174,13 +224,13 @@ export default {
     left: 50%;
     height: vheight(991);
     aspect-ratio: 823 / 991;
-    background-image: url('../assets/images/cat-imagex1.png');
+    background-image: url("../assets/images/cat-imagex1.png");
     background-size: contain;
     transform: translateX(-50%);
     z-index: 3;
 
     @include retina {
-      background-image: url('../assets/images/cat-imagex2.png');
+      background-image: url("../assets/images/cat-imagex2.png");
     }
 
     @include medium-screen {
@@ -192,15 +242,14 @@ export default {
     @include small-screen {
       height: ssmall(276);
       aspect-ratio: 229 / 276;
-      background-image: url('../assets/images/cat-imagex0.5.png');
+      background-image: url("../assets/images/cat-imagex0.5.png");
       top: 50%;
       left: auto;
       right: ssmall(-11);
       transform: translate(0, calc(-50% - ssmall(12)));
 
-
       @include retina {
-        background-image: url('../assets/images/cat-imagex1.png');
+        background-image: url("../assets/images/cat-imagex1.png");
       }
     }
   }
@@ -274,9 +323,22 @@ export default {
   &__shadow {
     width: vheight(455);
     height: vheight(88);
-    background-image: url('../assets/images/shadow.svg');
     background-size: contain;
     background-repeat: no-repeat;
+
+    &.is--hidden div {
+      opacity: 0;
+    }
+
+    div {
+      width: 100%;
+      height: 100%;
+      background-image: url("../assets/images/shadow.svg");
+      background-size: contain;
+      background-repeat: no-repeat;
+      opacity: 1;
+      transition: opacity 0.5s 0.5s;
+    }
 
     @include medium-screen {
       width: sbig(445);

@@ -8,10 +8,14 @@
         :number="number"
       />
       <div class="title-word title-word--left">
-        <div class="title-word__inner"><img src="../assets/images/bit.svg"></div>
+        <div class="title-word__inner">
+          <img src="../assets/images/bit.svg" />
+        </div>
       </div>
       <div class="title-word title-word--right">
-        <div class="title-word__inner"><img src="../assets/images/block.svg"></div>
+        <div class="title-word__inner">
+          <img src="../assets/images/block.svg" />
+        </div>
       </div>
     </div>
     <div class="main-screen__bottom">
@@ -34,71 +38,85 @@
 </template>
 
 <script>
-import Figure from './Figure.vue';
-import { getShuffledNumbersArray } from '../helpers/utils';
-import gsap from 'gsap';
+import Figure from "./Figure.vue";
+import { getShuffledNumbersArray } from "../helpers/utils";
+import gsap from "gsap";
 
 export default {
   components: {
-    Figure
+    Figure,
   },
   data() {
     return {
-      figuresAmount: 8
-    }
+      figuresAmount: 8,
+    };
   },
   computed: {
     figuresArray() {
       return getShuffledNumbersArray(this.figuresAmount);
-    }
+    },
   },
   mounted() {
-    const figures = this.$refs.mainScreen.querySelectorAll('.figure');
-    const wordLeft = this.$refs.mainScreen.querySelector('.title-word--left');
-    const wordRight = this.$refs.mainScreen.querySelector('.title-word--right');
+    const figures = this.$refs.mainScreen.querySelectorAll(".figure");
+    const wordLeft = this.$refs.mainScreen.querySelector(".title-word--left");
+    const wordRight = this.$refs.mainScreen.querySelector(".title-word--right");
 
-    const timeline = gsap.timeline({delay: 0.5});
+    const timeline = gsap.timeline({ delay: 0.5 });
 
     figures.forEach((figure) => {
-      timeline.from(figure, {
-        duration: 0.5,
-        yPercent: -50,
-        opacity: 0,
-      }, '-=0.4')
-    })
+      timeline.from(
+        figure,
+        {
+          duration: 0.5,
+          yPercent: -50,
+          opacity: 0,
+        },
+        "-=0.4"
+      );
+    });
 
-    const trLeft = window.innerWidth < 768 && window.innerHeight > window.innerWidth
-      ? 'translate(100vh, -100vh)'
-      : 'translate(-100vw, 100vh)';
+    const trLeft =
+      window.innerWidth < 768 && window.innerHeight > window.innerWidth
+        ? "translate(100vh, -100vh)"
+        : "translate(-100vw, 100vh)";
 
-    const trRight = window.innerWidth < 768 && window.innerHeight > window.innerWidth
-      ? 'translate(-100vh, 100vh)'
-      : 'translate(100vw, -100vh)';
+    const trRight =
+      window.innerWidth < 768 && window.innerHeight > window.innerWidth
+        ? "translate(-100vh, 100vh)"
+        : "translate(100vw, -100vh)";
 
     timeline
-      .from(wordLeft, {
-        transform: trLeft,
-        ease: 'power4.out',
-        duration: 1.1,
-      }, 'word')
-      .from(wordRight, {
-        transform: trRight,
-        ease: 'power4.out',
-        duration: 1.1,
-      }, 'word')
-  }
-}
+      .from(
+        wordLeft,
+        {
+          transform: trLeft,
+          ease: "power4.out",
+          duration: 1.1,
+        },
+        "word"
+      )
+      .from(
+        wordRight,
+        {
+          transform: trRight,
+          ease: "power4.out",
+          duration: 1.1,
+        },
+        "word"
+      );
+  },
+};
 </script>
 
 <style scoped lang="scss">
-@import '../styles/variables';
-@import '../styles/functions';
-@import '../styles/mixins';
+@import "../styles/variables";
+@import "../styles/functions";
+@import "../styles/mixins";
 
 .main-screen {
   position: relative;
   min-height: calc(var(--vh, 1vh) * 100);
-  background: #EAF0EE;
+  background: #eaf0ee;
   overflow: hidden;
 
   @include small-screen {
@@ -113,7 +131,7 @@ export default {
   }
 
   &__bottom {
-    font-family: 'TokeelyBrookings';
+    font-family: "TokeelyBrookings";
     position: absolute;
     left: 0;
     bottom: 0;
@@ -130,7 +148,7 @@ export default {
   &__desc {
     font-size: sbig(48);
     line-height: 56%;
-    color: #ADAEAE;
+    color: #adaeae;
     text-align: center;
     margin: 0 auto 6.3vh;
     letter-spacing: -0.12rem;
@@ -201,85 +219,94 @@ export default {
   }
 
   &--left {
-    bottom: 13.37%;
-    right: 50%;
+    bottom: 45%;
+    right: 58.5%;
 
-    @include narrow-landscape {
-      right: auto;
-      left: 4.22%;
-    }
+    // @include narrow-landscape {
+    //   right: auto;
+    //   left: 4.22%;
+    // }
 
-    @media (min-aspect-ratio: 1920 / 1065) {
-      bottom: 20%;
-    }
+    // @media (min-aspect-ratio: 1920 / 1065) {
+    //   bottom: 20%;
+    // }
 
-    @include extra-landscape {
-      bottom: 25%;
-    }
+    // @include extra-landscape {
+    //   bottom: 25%;
+    // }
 
-    @include medium-screen {
-      bottom: 25%;
-    }
+    // @include medium-screen {
+    //   bottom: 25%;
+    // }
 
     @include small-screen {
-      top: 44.17%;
-      left: auto;
-      right: 7.81%;
+      top: 41.83%;
+      left: 52.5%;
+      // right: 10.3%;
 
       @include wide-mobile {
         right: 20%;
       }
     }
 
-    .title-word__inner {
-      transform: translateX(-27%);
+    // .title-word__inner {
+    //   transform: translateX(-27%);
 
-      @include narrow-landscape {
-        transform: none;
-      }
-    }
+    //   @include narrow-landscape {
+    //     transform: none;
+    //   }
+    // }
 
     img {
-      transform-origin: top left;
+      transform-origin: bottom right;
+
+      @include small-screen {
+        transform-origin: bottom left;
+      }
     }
   }
 
   &--right {
-    left: 50%;
-    top: 9.03%;
+    left: 34.7%;
+    top: 68.5%;
 
-    @include narrow-landscape {
-      left: auto;
-      right: 1.35%;
-    }
+    // @include narrow-landscape {
+    //   left: auto;
+    //   right: 1.35%;
+    // }
 
-    @include extra-landscape {
-      top: 17%;
-    }
+    // @include extra-landscape {
+    //   top: 17%;
+    // }
 
-    @include medium-screen {
-      top: 20%;
-    }
+    // @include medium-screen {
+    //   top: 20%;
+    // }
 
     @include small-screen {
-      top: 43.33%;
-      right: 16.56%;
+      top: 45.66%;
+      right: 26.87%;
+      left: auto;
 
       @include wide-mobile {
         right: 25%;
       }
     }
 
-    .title-word__inner {
-      transform: translateX(-27%);
+    // .title-word__inner {
+    //   transform: translateX(-27%);
 
-      @include narrow-landscape {
-        transform: none;
-      }
-    }
+    //   @include narrow-landscape {
+    //     transform: none;
+    //   }
+    // }
 
     img {
-      transform-origin: bottom right;
+      transform-origin: top left;
+
+      @include small-screen {
+        transform-origin: top right;
+      }
     }
   }
 }
